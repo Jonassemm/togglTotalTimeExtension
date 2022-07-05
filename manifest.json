@@ -1,5 +1,5 @@
 {
-  "name": "Arbeitszeit",
+  "name": "TogglTotalTime",
   "description": "Total tracked toggl time",
   "version": "1.0",
   "manifest_version": 3,
