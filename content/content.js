@@ -27,6 +27,13 @@ const timeObserver = new MutationObserver(function (mutations) {
   }
 });
 
+// observice changes in time list (deletin adding entries)
+const timeListObserver = new MutationObserver(function (mutations) {
+  window.setTimeout(() => {
+    updateTime();
+  }, 1000);
+});
+
 //trigger when page loaded
 const observer = new MutationObserver(function (mutations) {
   if (document.querySelector('.css-1705vbf-Column-TimerDashboardArea')) {
@@ -42,13 +49,20 @@ const observer = new MutationObserver(function (mutations) {
           characterData: true,
         }
       );
+      timeListObserver.observe(
+        document.querySelector('.css-1g8zd07-Page-EnhancedPage').lastChild,
+        {
+          childList: true,
+          subtree: true,
+        }
+      );
       // start/stop count time action listener
       document
         .querySelector('button.ew4ipl50')
         .addEventListener('click', function () {
           window.setTimeout(() => {
             updateTime();
-          }, 2000);
+          }, 1000);
         });
       initTotalDisplay();
     });
