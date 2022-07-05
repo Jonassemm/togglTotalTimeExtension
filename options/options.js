@@ -31,8 +31,6 @@ function initFields() {
   });
 }
 
-initFields();
-
 function specialDayListener(startElement, endElement, identifier) {
   if (startElement.value && endElement.value) {
     chrome.storage.sync.get([identifier], (data) => {
@@ -65,39 +63,25 @@ saveSick.addEventListener(
   )
 );
 
-saveHoliday.addEventListener('click', () => {
-  let holidayStart = document.querySelector('#holidayStart');
-  let holidayEnd = document.querySelector('#holidayEnd');
-  if (holidayStart && holidayEnd) {
-    chrome.storage.sync.get(['holidays'], (data) => {
-      let tmpHolidays = [];
-      if (data.holidays) {
-        tmpHolidays = data.holidays;
-      }
-      tmpHolidays = tmpHolidays.concat(
-        getDatesInRange(
-          new Date(holidayStart.value),
-          new Date(holidayEnd.value)
-        )
-      );
-      chrome.storage.sync.set({
-        holidays: tmpHolidays,
-      });
-      holidayStart.value = null;
-      holidayEnd.value = null;
-    });
-  }
-});
+saveHoliday.addEventListener(
+  'click',
+  specialDayListener.bind(
+    null,
+    document.getElementById('holidayStart'),
+    document.getElementById('holidayEnd'),
+    'holidays'
+  )
+);
 
 function getDatesInRange(startDate, endDate) {
   const date = new Date(startDate.getTime());
-
   const dates = [];
 
   while (date <= endDate) {
     dates.push(new Date(date).toISOString().split('T')[0]);
     date.setDate(date.getDate() + 1);
   }
-
   return dates;
 }
+
+initFields();
