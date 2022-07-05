@@ -1,0 +1,18 @@
+{
+  "name": "Arbeitszeit",
+  "description": "Total tracked toggl time",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "action": { "default_popup": "index.html" },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.toggl.com/*"],
+      "js": ["dataFunctions.js", "content.js"],
+      "css": ["content.css"]
+    }
+  ]
+}
