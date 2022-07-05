@@ -48,7 +48,7 @@ const observer = new MutationObserver(function (mutations) {
         .addEventListener('click', function () {
           window.setTimeout(() => {
             updateTime();
-          }, 1000);
+          }, 2000);
         });
       initTotalDisplay();
     });

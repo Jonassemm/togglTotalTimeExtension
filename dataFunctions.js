@@ -1,8 +1,9 @@
+/* 
 const workspace_id = 1714409;
 const user_agent = 'jonas@kurviger.de';
 const authorization =
   'NjE2YmRhNDllMTg4NzYyN2I2Njg3NmFhNTQ2MDEwOWI6YXBpX3Rva2Vu';
-
+ */
 class DataFunctions {
   constructor() {
     this.hollidayCount = 10;
@@ -10,12 +11,22 @@ class DataFunctions {
     this.firstDay = new Date('2021-11-15');
     this.dailyTime = 10800000; //time in ms
     this.hollidays = [];
+    this.workspaceID;
+    this.userAgent;
+    this.authKey;
   }
 
   init = function () {
     return new Promise((resolve) => {
       chrome.storage.sync.get(
-        ['hollidayCount', 'sickCount', 'hollidays'],
+        [
+          'hollidayCount',
+          'sickCount',
+          'hollidays',
+          'workspaceID',
+          'userAgent',
+          'authKey',
+        ],
         (data) => {
           if (data.hollidayCount) {
             this.hollidayCount = data.hollidayCount;
@@ -23,7 +34,15 @@ class DataFunctions {
           if (data.sickCount) {
             this.sickCount = data.sickCount;
           }
-
+          if (data.workspaceID && data.userAgent && data.authKey) {
+            this.workspaceID = data.workspaceID;
+            this.userAgent = data.userAgent;
+            this.authKey = data.authKey;
+          } else {
+            alert(
+              'Please enter your workspace ID, user agent and authorization key in the extension options to get data from Toggl!'
+            );
+          }
           if (data.hollidays) {
             this.hollidays = data.hollidays;
             resolve();
@@ -50,7 +69,10 @@ class DataFunctions {
 
   getToggl = async function (start, end) {
     var myHeaders = new Headers();
-    myHeaders.append('Authorization', `Basic ${authorization}`);
+    myHeaders.append(
+      'Authorization',
+      `Basic ${btoa(this.authKey + ':api_token')}`
+    );
 
     var requestOptions = {
       method: 'GET',
@@ -59,7 +81,7 @@ class DataFunctions {
     };
 
     return fetch(
-      `https://api.track.toggl.com/reports/api/v2/summary?workspace_id=${workspace_id}&user_agent=${user_agent}&since=${start}&until=${end}`,
+      `https://api.track.toggl.com/reports/api/v2/summary?workspace_id=${this.workspaceID}&user_agent=${this.userAgent}&since=${start}&until=${end}`,
       requestOptions
     )
       .then((response) => response.json())

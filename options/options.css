@@ -1,0 +1,37 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  padding-top: 30px;
+}
+
+.mainContent {
+  margin: auto;
+  padding: 30px;
+  min-width: 300px;
+  width: fit-content;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 3px;
+}
+
+.form-row > div {
+  width: 100%;
+}
+
+.form-row > div > input {
+  width: 100%;
+  font-size: 16px;
+}
+
+#saveSuccess {
+  color: green;
+  margin-left: 15px;
+  display: none;
+}

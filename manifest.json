@@ -8,6 +8,7 @@
   "background": {
     "service_worker": "/background/background.js"
   },
+  "options_page": "/options/options.html",
   "content_scripts": [
     {
       "matches": ["https://*.toggl.com/*"],
