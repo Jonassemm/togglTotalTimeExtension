@@ -127,11 +127,17 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
   updateTime();
 });
 
-//updated when url changed to toggl.com/timer
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.message === 'update-url') {
-    if ((request.url = 'https://track.toggl.com/timer')) {
-      initTotalDisplay();
-    }
+let lastUrl = location.href;
+new MutationObserver(() => {
+  const url = location.href;
+  if (url !== lastUrl) {
+    lastUrl = url;
+    onUrlChange();
   }
-});
+}).observe(document, { subtree: true, childList: true });
+
+function onUrlChange() {
+  if (location.href == 'https://track.toggl.com/timer') {
+    initTotalDisplay();
+  }
+}
