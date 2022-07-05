@@ -13,11 +13,11 @@ async function initData() {
 // Observing change in today and week total time
 const timeObserver = new MutationObserver(function (mutations) {
   if (Date.now() - lastUpdate > 1000) {
-    console.log('updating');
-    let coutingTime = null;
-    const currCount = document.querySelector(
+    let coutingTime = 0;
+    let currCount = document.querySelector(
       'span.time-format-utils__duration'
     ).innerHTML;
+    currCount = currCount.replace(/<[^>]*>/gi, '');
     currCount = currCount.split(':');
     coutingTime += parseInt(currCount[0]) * 60 * 60 * 1000;
     coutingTime += parseInt(currCount[1]) * 60 * 1000;
@@ -31,7 +31,6 @@ const timeObserver = new MutationObserver(function (mutations) {
 const observer = new MutationObserver(function (mutations) {
   if (document.querySelector('.css-1705vbf-Column-TimerDashboardArea')) {
     observer.disconnect();
-    console.log('test');
     initData().then(() => {
       timeObserver.observe(
         document.querySelector(
@@ -47,7 +46,9 @@ const observer = new MutationObserver(function (mutations) {
       document
         .querySelector('button.ew4ipl50')
         .addEventListener('click', function () {
-          updateTime();
+          window.setTimeout(() => {
+            updateTime();
+          }, 1000);
         });
       initTotalDisplay();
     });
