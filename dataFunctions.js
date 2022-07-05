@@ -1,3 +1,8 @@
+const workspace_id = 1714409;
+const user_agent = 'jonas@kurviger.de';
+const authorization =
+  'NjE2YmRhNDllMTg4NzYyN2I2Njg3NmFhNTQ2MDEwOWI6YXBpX3Rva2Vu';
+
 class DataFunctions {
   constructor() {
     this.hollidayCount = 10;
@@ -45,10 +50,7 @@ class DataFunctions {
 
   getToggl = async function (start, end) {
     var myHeaders = new Headers();
-    myHeaders.append(
-      'Authorization',
-      'Basic NjE2YmRhNDllMTg4NzYyN2I2Njg3NmFhNTQ2MDEwOWI6YXBpX3Rva2Vu'
-    );
+    myHeaders.append('Authorization', `Basic ${authorization}`);
 
     var requestOptions = {
       method: 'GET',
@@ -57,7 +59,7 @@ class DataFunctions {
     };
 
     return fetch(
-      `https://api.track.toggl.com/reports/api/v2/summary?workspace_id=1714409&user_agent=jonas@kurviger.de&since=${start}&until=${end}`,
+      `https://api.track.toggl.com/reports/api/v2/summary?workspace_id=${workspace_id}&user_agent=${user_agent}&since=${start}&until=${end}`,
       requestOptions
     )
       .then((response) => response.json())

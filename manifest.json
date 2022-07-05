@@ -4,15 +4,15 @@
   "version": "1.0",
   "manifest_version": 3,
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
-  "action": { "default_popup": "index.html" },
+  "action": { "default_popup": "/popup/popup.html" },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "/background/background.js"
   },
   "content_scripts": [
     {
       "matches": ["https://*.toggl.com/*"],
-      "js": ["dataFunctions.js", "content.js"],
-      "css": ["content.css"]
+      "js": ["dataFunctions.js", "/content/content.js"],
+      "css": ["/content/content.css"]
     }
   ]
 }
