@@ -6,11 +6,11 @@ const authorization =
  */
 class DataFunctions {
   constructor() {
-    this.hollidayCount = 10;
-    this.sickCount = 2;
     this.firstDay = new Date('2021-11-15');
     this.dailyTime = 10800000; //time in ms
-    this.hollidays = [];
+    this.publicHolidays = [];
+    this.holidays = [];
+    this.sickdays = [];
     this.workspaceID;
     this.userAgent;
     this.authKey;
@@ -20,16 +20,19 @@ class DataFunctions {
     return new Promise((resolve) => {
       chrome.storage.sync.get(
         [
-          'hollidayCount',
-          'sickCount',
-          'hollidays',
           'workspaceID',
           'userAgent',
           'authKey',
+          'sickdays',
+          'holidays',
+          'publicHolidays',
         ],
         (data) => {
-          if (data.hollidayCount) {
-            this.hollidayCount = data.hollidayCount;
+          if (data.holidays) {
+            this.holidays = data.holidays;
+          }
+          if (data.sickdays) {
+            this.sickdays = data.sickdays;
           }
           if (data.sickCount) {
             this.sickCount = data.sickCount;
@@ -43,11 +46,11 @@ class DataFunctions {
               'Please enter your workspace ID, user agent and authorization key in the extension options to get data from Toggl!'
             );
           }
-          if (data.hollidays) {
-            this.hollidays = data.hollidays;
+          if (data.publicHolidays) {
+            this.publicHolidays = data.publicHolidays;
             resolve();
           } else {
-            this.fetchHollidays().then(() => {
+            this.fetchHolidays().then(() => {
               resolve();
             });
           }
@@ -56,14 +59,14 @@ class DataFunctions {
     });
   };
 
-  fetchHollidays = async function () {
+  fetchHolidays = async function () {
     return fetch(`https://get.api-feiertage.de?years=2021,2022,2023&states=bw`)
       .then((response) => response.json())
       .then((data) => data.feiertage)
       .then((data) => data.map((data) => data.date))
       .then((data) => {
-        chrome.storage.sync.set({ hollidays: data });
-        this.hollidays = data;
+        chrome.storage.sync.set({ publicHolidays: data });
+        this.publicHolidays = data;
       });
   };
 
@@ -89,13 +92,15 @@ class DataFunctions {
       .catch((error) => console.log('error', error));
   };
 
-  getBusinessDatesCount = function (startDate, endDate, hollidays) {
+  getBusinessDatesCount = function (startDate, endDate) {
     let count = 0;
     const curDate = new Date(startDate.getTime());
     while (curDate <= endDate) {
       const dayOfWeek = curDate.getDay();
       if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-        if (!hollidays.includes(curDate.toISOString().split('T')[0])) {
+        if (
+          !this.publicHolidays.includes(curDate.toISOString().split('T')[0])
+        ) {
           count++;
         }
       }
@@ -104,20 +109,28 @@ class DataFunctions {
     return count;
   };
 
-  getTotal = async function () {
-    const workingDays = this.getBusinessDatesCount(
-      this.firstDay,
-      new Date(),
-      this.hollidays
-    );
+  getDatesInRange = function (start, end, range) {
+    let output = [];
+    for (let i = 0; i < range.length; i++) {
+      if (new Date(range[i]) > start && new Date(range[i]) < end) {
+        output.push(range[i]);
+      }
+    }
+    return output;
+  };
+
+  getTotal = async function (start = this.firstDay, end = new Date()) {
+    const workingDays = this.getBusinessDatesCount(start, end);
     const targetTime = workingDays * this.dailyTime;
-    const hollidayTime = this.hollidayCount * this.dailyTime;
-    const sickTime = this.sickCount * this.dailyTime;
+    const holidayCount = this.getDatesInRange(start, end, this.holidays).length;
+    const holidayTime = holidayCount * this.dailyTime;
+    const sickCount = this.getDatesInRange(start, end, this.sickdays).length;
+    const sickTime = sickCount * this.dailyTime;
     let togglTime = await this.getToggl(
-      this.firstDay.toISOString().split('T')[0],
-      new Date().toISOString().split('T')[0]
+      start.toISOString().split('T')[0],
+      end.toISOString().split('T')[0]
     );
-    return targetTime - togglTime - hollidayTime - sickTime;
+    return targetTime - togglTime - holidayTime - sickTime;
   };
 
   padTo2Digits = function (num) {

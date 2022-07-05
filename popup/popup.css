@@ -5,30 +5,12 @@ body {
 
 .mainContent {
   width: fit-content;
-  padding: 10px 30px;
   margin: auto;
 }
 
 #totalTime {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   text-align: center;
-}
-
-.buttonGroup {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: fit-content;
-}
-
-.buttonGroup > .buttonGroup-buttons {
-  margin-left: 10px;
-  display: flex;
-}
-
-#getTimeButton {
-  margin-top: 15px;
 }
 
 button {
