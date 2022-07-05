@@ -4,50 +4,65 @@
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
-    <div class="layout">
-      <div class="mainContent">
-        <h3>Toggl credentials</h3>
-        <div class="form-row">
-          <div><span>WorkspaceID</span></div>
-          <div>
-            <input type="text" id="workspaceID" placeholder="WorkspaceID" />
+    <div>
+      <div class="layout">
+        <div class="mainContent">
+          <h3>Toggl credentials</h3>
+          <div class="form-row">
+            <div><span>WorkspaceID</span></div>
+            <div>
+              <input type="text" id="workspaceID" placeholder="WorkspaceID" />
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div><span>User Agent</span></div>
-          <div>
-            <input type="text" id="userAgent" placeholder="User Agent" />
+          <div class="form-row">
+            <div><span>User Agent</span></div>
+            <div>
+              <input type="text" id="userAgent" placeholder="User Agent" />
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div><span>API token</span></div>
+          <div class="form-row">
+            <div><span>API token</span></div>
+            <div>
+              <input type="text" id="authKey" placeholder="API token" />
+            </div>
+          </div>
           <div>
-            <input type="text" id="authKey" placeholder="API token" />
+            <button id="saveOptions">Save</button
+            ><span id="saveSuccess">Saved Successfully</span>
           </div>
         </div>
         <div>
-          <button id="saveOptions">Save</button
-          ><span id="saveSuccess">Saved Successfully</span>
+          <div class="mainContent">
+            <h3>Add Vacation</h3>
+            <div class="specialDayRow">
+              <div>
+                <span>start</span> <input type="date" id="holidayStart" />
+              </div>
+              <div><span>end</span> <input type="date" id="holidayEnd" /></div>
+            </div>
+            <button id="saveHoliday" class="saveButton">Save</button>
+          </div>
+          <div class="mainContent">
+            <h3>Add Sick Days</h3>
+            <div class="specialDayRow">
+              <div><span>start</span> <input type="date" id="sickStart" /></div>
+              <div><span>end</span> <input type="date" id="sickEnd" /></div>
+            </div>
+            <button id="saveSick" class="saveButton">Save</button>
+          </div>
         </div>
       </div>
-      <div>
+      <div class="layout-off">
         <div class="mainContent">
-          <h3>Vacation</h3>
-          <div class="specialDayRow">
-            <div>
-              <span>start</span> <input type="date" id="holidayStart" />
-            </div>
-            <div><span>end</span> <input type="date" id="holidayEnd" /></div>
-          </div>
-          <button id="saveHoliday" class="saveButton">Save</button>
-        </div>
-        <div class="mainContent">
-          <h3>Sick Days</h3>
-          <div class="specialDayRow">
-            <div><span>start</span> <input type="date" id="sickStart" /></div>
-            <div><span>end</span> <input type="date" id="sickEnd" /></div>
-          </div>
-          <button id="saveSick" class="saveButton">Save</button>
+          <h3>Off Days</h3>
+          <table id="offDayTable">
+            <tr>
+              <th>Nr.</th>
+              <th>Type</th>
+              <th>date</th>
+              <th></th>
+            </tr>
+          </table>
         </div>
       </div>
     </div>

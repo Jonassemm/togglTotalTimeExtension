@@ -129,10 +129,9 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 
 //updated when url changed to toggl.com/timer
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  console.log(request.url); // new url is now in content scripts!
-  if (request === 'update-url') {
+  if (request.message === 'update-url') {
     if ((request.url = 'https://track.toggl.com/timer')) {
-      updateTime();
+      initTotalDisplay();
     }
   }
 });

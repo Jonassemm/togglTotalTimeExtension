@@ -59,3 +59,41 @@ body {
   margin: auto;
   display: flex;
 }
+
+.layout-off {
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.layout-off > .mainContent {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  border: 1px solid #ccc;
+  background-color: #ccc;
+}
+
+th:first-child {
+  width: 10%;
+}
+
+td {
+  text-align: center;
+  padding: 3px;
+}
+
+td:last-child {
+  text-align: end;
+}
+
+tr:nth-child(odd) {
+  background-color: rgba(150, 212, 212, 0.4);
+}

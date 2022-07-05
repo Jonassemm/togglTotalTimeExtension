@@ -18,16 +18,61 @@ submitBtn.addEventListener('click', () => {
 });
 
 function initFields() {
-  chrome.storage.sync.get(['workspaceID', 'userAgent', 'authKey'], (data) => {
-    if (data.workspaceID) {
-      workspace_id.value = data.workspaceID;
+  chrome.storage.sync.get(
+    ['workspaceID', 'userAgent', 'authKey', 'holidays', 'sickdays'],
+    (data) => {
+      if (data.workspaceID) {
+        workspace_id.value = data.workspaceID;
+      }
+      if (data.userAgent) {
+        user_agent.value = data.userAgent;
+      }
+      if (data.authKey) {
+        authorization.value = data.authKey;
+      }
+      let arr = [];
+      if (data.holidays) {
+        arr = data.holidays.map((holiday) => {
+          return {
+            date: holiday,
+            type: 'holiday',
+          };
+        });
+      }
+      if (data.sickdays) {
+        arr = arr.concat(
+          data.sickdays.map((sickday) => {
+            return {
+              date: sickday,
+              type: 'sickday',
+            };
+          })
+        );
+      }
+      populateOffDayTable(arr);
+      let deleteEntryButtons = document.querySelectorAll('.deleteEntryButton');
+      deleteEntryButtons.forEach((button) => {
+        button.addEventListener(
+          'click',
+          deleteDateEntry.bind(null, button.value)
+        );
+      });
     }
-    if (data.userAgent) {
-      user_agent.value = data.userAgent;
+  );
+}
+
+function deleteDateEntry(idx) {
+  chrome.storage.sync.get(['holidays', 'sickdays'], (data) => {
+    if (data.holidays.length > idx) {
+      let tmpArr = data.holidays;
+      tmpArr.splice(idx, 1);
+      chrome.storage.sync.set({ holidays: tmpArr });
+    } else {
+      let tmpArr = data.sickdays;
+      tmpArr.splice(idx - data.holidays.length, 1);
+      chrome.storage.sync.set({ sickdays: tmpArr });
     }
-    if (data.authKey) {
-      authorization.value = data.authKey;
-    }
+    location.reload();
   });
 }
 
@@ -82,6 +127,30 @@ function getDatesInRange(startDate, endDate) {
     date.setDate(date.getDate() + 1);
   }
   return dates;
+}
+
+function populateOffDayTable(arr) {
+  const table = document.getElementById('offDayTable');
+  arr.map((entry, index) => {
+    let tr = document.createElement('tr');
+    let td = document.createElement('td');
+    td.textContent = index;
+    tr.appendChild(td);
+    let td2 = document.createElement('td');
+    td2.textContent = entry?.type;
+    tr.appendChild(td2);
+    let td3 = document.createElement('td');
+    td3.textContent = entry?.date;
+    tr.appendChild(td3);
+    let btn = document.createElement('button');
+    btn.textContent = 'Delete';
+    btn.value = index;
+    btn.classList.add('deleteEntryButton');
+    let td4 = document.createElement('td');
+    td4.appendChild(btn);
+    tr.appendChild(td4);
+    table.appendChild(tr);
+  });
 }
 
 initFields();
