@@ -26,8 +26,27 @@
               <input type="text" id="authKey" placeholder="API token" />
             </div>
           </div>
+          <div class="form-row">
+            <div><span>Daily working time (minutes)</span></div>
+            <div>
+              <input
+                type="number"
+                id="dailyTime"
+                placeholder="minutes per day"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div><span>First Day at Company</span></div>
+            <div>
+              <input type="date" id="firstDay" />
+            </div>
+          </div>
+          <input type="checkbox" id="enableInject" value="inject" /><span
+            >Enable Toggl injection</span
+          >
           <div>
-            <button id="saveOptions">Save</button
+            <button class="saveButton" id="saveOptions">Save</button
             ><span id="saveSuccess">Saved Successfully</span>
           </div>
         </div>

@@ -16,10 +16,10 @@ Gets tracked time entries from api.track.toggl.com and public holidays from get.
 
 ## Config
 
-As a setup the **workplace ID, user email and API key** from Toggl have to be entered in the extensions options.
-
 -> right click on extension -> options
 
-The options page is also for entering holidays and sick-days and managing them.
+As a setup the **workplace ID, user email, API key, daily working time and first day** need to be set in the extensions options.
 
-*The first day and the daily working time are currently hardcoded.*
+If you want need the total time injected to toggl.com you can enable that with the "Enable Toggl Injection" checkbox.
+
+The options page is also for entering holidays and sick-days and managing them. Furthermore CSV reports can be generated for any given time span.

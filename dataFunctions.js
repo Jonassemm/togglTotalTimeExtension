@@ -1,7 +1,7 @@
 class DataFunctions {
   constructor() {
-    this.firstDay = new Date('2021-11-15');
-    this.dailyTime = 10800000; //time in ms
+    this.firstDay = new Date();
+    this.dailyTime = 0;
     this.publicHolidays = [];
     this.holidays = [];
     this.sickdays = [];
@@ -11,7 +11,7 @@ class DataFunctions {
   }
 
   init = function () {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       chrome.storage.sync.get(
         [
           'workspaceID',
@@ -20,33 +20,43 @@ class DataFunctions {
           'sickdays',
           'holidays',
           'publicHolidays',
+          'firstDay',
+          'dailyTime',
         ],
         (data) => {
-          if (data.holidays) {
-            this.holidays = data.holidays;
-          }
-          if (data.sickdays) {
-            this.sickdays = data.sickdays;
-          }
-          if (data.sickCount) {
-            this.sickCount = data.sickCount;
-          }
-          if (data.workspaceID && data.userAgent && data.authKey) {
+          if (
+            data.firstDay &&
+            data.dailyTime &&
+            data.workspaceID &&
+            data.userAgent &&
+            data.authKey
+          ) {
+            this.firstDay = new Date(data.firstDay);
+            this.dailyTime = data.dailyTime;
             this.workspaceID = data.workspaceID;
             this.userAgent = data.userAgent;
             this.authKey = data.authKey;
+
+            if (data.sickdays) {
+              this.sickdays = data.sickdays;
+            }
+
+            if (data.holidays) {
+              this.holidays = data.holidays;
+            }
+            if (data.publicHolidays) {
+              this.publicHolidays = data.publicHolidays;
+              resolve();
+            } else {
+              this.fetchHolidays().then(() => {
+                resolve();
+              });
+            }
           } else {
             alert(
               'Please enter your workspace ID, user agent and authorization key in the extension options to get data from Toggl!'
             );
-          }
-          if (data.publicHolidays) {
-            this.publicHolidays = data.publicHolidays;
-            resolve();
-          } else {
-            this.fetchHolidays().then(() => {
-              resolve();
-            });
+            reject('Options not set!');
           }
         }
       );

@@ -117,27 +117,31 @@ function initTotalDisplay() {
   updateTime();
 }
 
-observer.observe(document.querySelector('.content-wrapper'), {
-  childList: true,
-  subtree: true,
-});
-
-//update when storage changed
-chrome.storage.onChanged.addListener(function (changes, namespace) {
-  updateTime();
-});
-
-let lastUrl = location.href;
-new MutationObserver(() => {
-  const url = location.href;
-  if (url !== lastUrl) {
-    lastUrl = url;
-    onUrlChange();
-  }
-}).observe(document, { subtree: true, childList: true });
-
 function onUrlChange() {
   if (location.href == 'https://track.toggl.com/timer') {
     initTotalDisplay();
   }
 }
+
+chrome.storage.sync.get(['enableInject'], (result) => {
+  if (result.enableInject) {
+    observer.observe(document.querySelector('.content-wrapper'), {
+      childList: true,
+      subtree: true,
+    });
+
+    //update when storage changed
+    chrome.storage.onChanged.addListener(function (changes, namespace) {
+      updateTime();
+    });
+
+    let lastUrl = location.href;
+    new MutationObserver(() => {
+      const url = location.href;
+      if (url !== lastUrl) {
+        lastUrl = url;
+        onUrlChange();
+      }
+    }).observe(document, { subtree: true, childList: true });
+  }
+});

@@ -6,22 +6,55 @@ const saveSuccess = document.getElementById('saveSuccess');
 const saveHoliday = document.querySelector('#saveHoliday');
 const saveSick = document.querySelector('#saveSick');
 const generateReport = document.querySelector('#generateReport');
+const enableInject = document.querySelector('#enableInject');
+const firstDay = document.querySelector('#firstDay');
+const dailyTime = document.querySelector('#dailyTime');
 
 submitBtn.addEventListener('click', () => {
-  if (workspace_id.value && user_agent.value && authorization.value) {
+  if (
+    workspace_id.value &&
+    user_agent.value &&
+    authorization.value &&
+    firstDay.value &&
+    dailyTime.value
+  ) {
     chrome.storage.sync.set({
       workspaceID: workspace_id.value,
       userAgent: user_agent.value,
       authKey: authorization.value,
+      firstDay: firstDay.value,
+      dailyTime: dailyTime.value * 60 * 1000,
     });
     saveSuccess.style.display = 'block';
   }
 });
 
+enableInject.addEventListener('change', (e) => {
+  chrome.storage.sync.set({ enableInject: e.target.checked });
+});
+
 function initFields() {
   chrome.storage.sync.get(
-    ['workspaceID', 'userAgent', 'authKey', 'holidays', 'sickdays'],
+    [
+      'workspaceID',
+      'userAgent',
+      'authKey',
+      'holidays',
+      'sickdays',
+      'enableInject',
+      'firstDay',
+      'dailyTime',
+    ],
     (data) => {
+      if (data.firstDay) {
+        firstDay.value = data.firstDay;
+      }
+      if (data.dailyTime) {
+        dailyTime.value = data.dailyTime;
+      }
+      if (data.enableInject) {
+        enableInject.checked = true;
+      }
       if (data.workspaceID) {
         workspace_id.value = data.workspaceID;
       }
