@@ -50,7 +50,7 @@ function initFields() {
         firstDay.value = data.firstDay;
       }
       if (data.dailyTime) {
-        dailyTime.value = data.dailyTime;
+        dailyTime.value = data.dailyTime / 1000 / 60;
       }
       if (data.enableInject) {
         enableInject.checked = true;
