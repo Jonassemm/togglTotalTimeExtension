@@ -30,7 +30,8 @@ const timeObserver = new MutationObserver(function (mutations) {
 // observice changes in time list (deletin adding entries)
 const timeListObserver = new MutationObserver(function (mutations) {
   window.setTimeout(() => {
-    updateTime();
+    if (mutations[0].target.className != 'css-yht0st-Root et8m3zx1')
+      updateTime();
   }, 1000);
 });
 
@@ -69,11 +70,6 @@ const observer = new MutationObserver(function (mutations) {
   }
 });
 
-observer.observe(document.querySelector('.content-wrapper'), {
-  childList: true,
-  subtree: true,
-});
-
 async function updateTime(updatedTime) {
   let time;
   if (initialized) {
@@ -82,15 +78,14 @@ async function updateTime(updatedTime) {
       tmpTime = time;
     } else time = updatedTime;
     let timeElement = document.getElementById('totalTime');
-    if (time > 0) {
+    if (time < 0) {
       timeElement.classList.add('totalTime-bad');
       timeElement.classList.remove('totalTime-good');
     } else {
       timeElement.classList.add('totalTime-good');
       timeElement.classList.remove('totalTime-bad');
     }
-    timeElement.firstChild.nodeValue =
-      (time > 0 ? '- ' : '') + dataFunctions.convertMsToTime(Math.abs(time));
+    timeElement.firstChild.nodeValue = dataFunctions.convertMsToTime(time);
     return time;
   }
 }
@@ -121,6 +116,11 @@ function initTotalDisplay() {
   );
   updateTime();
 }
+
+observer.observe(document.querySelector('.content-wrapper'), {
+  childList: true,
+  subtree: true,
+});
 
 //update when storage changed
 chrome.storage.onChanged.addListener(function (changes, namespace) {

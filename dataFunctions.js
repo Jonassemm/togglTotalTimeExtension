@@ -65,6 +65,8 @@ class DataFunctions {
   };
 
   getToggl = async function (start, end) {
+    start = start.toISOString().split('T')[0];
+    end = end.toISOString().split('T')[0];
     var myHeaders = new Headers();
     myHeaders.append(
       'Authorization',
@@ -92,11 +94,7 @@ class DataFunctions {
     while (curDate <= endDate) {
       const dayOfWeek = curDate.getDay();
       if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-        if (
-          !this.publicHolidays.includes(curDate.toISOString().split('T')[0])
-        ) {
-          count++;
-        }
+        count++;
       }
       curDate.setDate(curDate.getDate() + 1);
     }
@@ -107,7 +105,10 @@ class DataFunctions {
     let output = [];
     for (let i = 0; i < range.length; i++) {
       if (new Date(range[i]) > start && new Date(range[i]) < end) {
-        output.push(range[i]);
+        const dayOfWeek = new Date(range[i]).getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          output.push(range[i]);
+        }
       }
     }
     return output;
@@ -115,29 +116,80 @@ class DataFunctions {
 
   getTotal = async function (start = this.firstDay, end = new Date()) {
     const workingDays = this.getBusinessDatesCount(start, end);
-    const targetTime = workingDays * this.dailyTime;
+    const publicHolidayCount = this.getDatesInRange(
+      start,
+      end,
+      this.publicHolidays
+    ).length;
     const holidayCount = this.getDatesInRange(start, end, this.holidays).length;
-    const holidayTime = holidayCount * this.dailyTime;
     const sickCount = this.getDatesInRange(start, end, this.sickdays).length;
-    const sickTime = sickCount * this.dailyTime;
-    let togglTime = await this.getToggl(
-      start.toISOString().split('T')[0],
-      end.toISOString().split('T')[0]
-    );
-    return targetTime - togglTime - holidayTime - sickTime;
+    const targetTime =
+      (workingDays - holidayCount - sickCount - publicHolidayCount) *
+      this.dailyTime;
+    let togglTime = await this.getToggl(start, end);
+    return togglTime - targetTime;
   };
 
   padTo2Digits = function (num) {
     return num.toString().padStart(2, '0');
   };
 
+  generateReport = async function (start, end) {
+    let workingDays = this.getBusinessDatesCount(start, end);
+    let holidayCount = this.getDatesInRange(start, end, this.holidays).length;
+    let publicHolidayCount = this.getDatesInRange(
+      start,
+      end,
+      this.publicHolidays
+    ).length;
+    let sickCount = this.getDatesInRange(start, end, this.sickdays).length;
+    let targetTime =
+      (workingDays - holidayCount - sickCount - publicHolidayCount) *
+      this.dailyTime;
+    let togglTime = await this.getToggl(start, end);
+    let diff = togglTime - targetTime;
+
+    const output = {
+      workingDays,
+      holidayCount,
+      publicHolidayCount,
+      sickCount,
+      targetTime: this.convertMsToTime(targetTime),
+      togglTime: this.convertMsToTime(togglTime),
+      diff: this.convertMsToTime(diff),
+    };
+    download(output);
+  };
+
   convertMsToTime = function (milliseconds) {
+    let negative = milliseconds < 0;
+    milliseconds = Math.abs(milliseconds);
     let seconds = Math.floor(milliseconds / 1000);
     let minutes = Math.floor(seconds / 60);
     let hours = Math.floor(minutes / 60);
     minutes = minutes % 60;
-    return `${this.padTo2Digits(hours)} hours ${this.padTo2Digits(
-      minutes
-    )} minutes`;
+    return `${negative ? '-' : ''} ${this.padTo2Digits(
+      hours
+    )} hours ${this.padTo2Digits(minutes)} minutes`;
   };
 }
+
+function download(obj) {
+  const csvData = csvmaker(obj);
+  const blob = new Blob([csvData], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  a.setAttribute('download', 'download.csv');
+  a.click();
+}
+
+const csvmaker = function (data) {
+  csvRows = [];
+  const headers = Object.keys(data);
+  csvRows.push(headers.join(','));
+  const values = Object.values(data).join(',');
+  csvRows.push(values);
+  return csvRows.join('\n');
+};

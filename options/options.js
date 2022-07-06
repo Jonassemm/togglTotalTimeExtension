@@ -5,6 +5,7 @@ const authorization = document.querySelector('#authKey');
 const saveSuccess = document.getElementById('saveSuccess');
 const saveHoliday = document.querySelector('#saveHoliday');
 const saveSick = document.querySelector('#saveSick');
+const generateReport = document.querySelector('#generateReport');
 
 submitBtn.addEventListener('click', () => {
   if (workspace_id.value && user_agent.value && authorization.value) {
@@ -117,6 +118,19 @@ saveHoliday.addEventListener(
     'holidays'
   )
 );
+
+generateReport.addEventListener('click', () => {
+  let start = document.getElementById('reportStart')?.value;
+  let end = document.getElementById('reportEnd')?.value;
+  if (start && end) {
+    let dataFunctions = new DataFunctions();
+    dataFunctions.init().then(() => {
+      dataFunctions.generateReport(new Date(start), new Date(end));
+    });
+  } else {
+    alert('Please enter a start and end date');
+  }
+});
 
 function getDatesInRange(startDate, endDate) {
   const date = new Date(startDate.getTime());
