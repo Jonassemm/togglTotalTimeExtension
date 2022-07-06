@@ -1,9 +1,3 @@
-/* 
-const workspace_id = 1714409;
-const user_agent = 'jonas@kurviger.de';
-const authorization =
-  'NjE2YmRhNDllMTg4NzYyN2I2Njg3NmFhNTQ2MDEwOWI6YXBpX3Rva2Vu';
- */
 class DataFunctions {
   constructor() {
     this.firstDay = new Date('2021-11-15');
