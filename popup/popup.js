@@ -21,3 +21,11 @@ const dataFunctions = new DataFunctions();
 dataFunctions.init().then(() => {
   updateTotal();
 });
+
+document.querySelector('#go-to-options').addEventListener('click', function () {
+  if (chrome.runtime.openOptionsPage) {
+    chrome.runtime.openOptionsPage();
+  } else {
+    window.open(chrome.runtime.getURL('options.html'));
+  }
+});

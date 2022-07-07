@@ -1,16 +1,21 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
+  background-color: #202124;
+  border-radius: 10px;
 }
 
 .mainContent {
   width: fit-content;
   margin: auto;
+  padding: 0 10px 10px 10px;
+  min-width: 100px;
 }
 
 #totalTime {
   padding: 10px;
   text-align: center;
+  border-radius: 5px;
 }
 
 button {
@@ -19,10 +24,11 @@ button {
   border: none;
   border-radius: 3px;
   font-size: 16px;
+  width: 100%;
 }
 
 button:hover {
-  background-color: #f44336;
+  background-color: #777;
   color: white;
 }
 

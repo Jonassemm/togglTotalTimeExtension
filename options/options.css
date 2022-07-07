@@ -4,22 +4,55 @@ body {
   padding-top: 30px;
   display: flex;
   justify-content: center;
+  background-color: #202124;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+hr {
+  border: 1px solid #0b5ec6;
+  margin-bottom: 20px;
 }
 
 .mainContent {
   margin: 20px;
-  padding: 30px;
+  padding: 10px 30px 30px 30px;
   min-width: 300px;
   width: fit-content;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 5px;
+  background-color: #292a2d;
+  color: white;
+}
+
+button {
+  padding: 8px 15px;
+  border: 1px solid #0b5ec6;
+  background-color: #292a2d;
+  color: #0b5ec6;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #151517;
+}
+
+input[type='text'],
+input[type='number'],
+input[type='date'] {
+  background-color: #151517;
+  color: #a9aaab;
+  border: none;
+  padding: 5px;
 }
 
 .form-row {
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-top: 20px;
   margin-bottom: 20px;
   gap: 3px;
 }
@@ -78,7 +111,8 @@ table {
 
 th {
   border: 1px solid #ccc;
-  background-color: #ccc;
+  background-color: #19191b;
+  padding: 10px;
 }
 
 th:first-child {
@@ -95,5 +129,9 @@ td:last-child {
 }
 
 tr:nth-child(odd) {
-  background-color: rgba(150, 212, 212, 0.4);
+  background-color: #010914;
+}
+
+.deleteEntryButton {
+  color: white;
 }
