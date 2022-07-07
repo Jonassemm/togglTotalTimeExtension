@@ -74,6 +74,32 @@ class DataFunctions {
       });
   };
 
+  getWorkspaces = function () {
+    var myHeaders = new Headers();
+    myHeaders.append(
+      'Authorization',
+      `Basic ${btoa(this.authKey + ':api_token')}`
+    );
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    return fetch(
+      'https://api.track.toggl.com/api/v8/workspaces',
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        return result.map((data) => {
+          return { id: data.id, name: data.name };
+        });
+      })
+      .catch((error) => console.log('error', error));
+  };
+
   getToggl = async function (start, end) {
     start = start.toISOString().split('T')[0];
     end = end.toISOString().split('T')[0];

@@ -9,28 +9,34 @@
         <div class="mainContent">
           <h3>Toggl credentials</h3>
           <hr />
-          <div class="form-row">
-            <div><span>WorkspaceID</span></div>
-            <div>
-              <input type="text" id="workspaceID" placeholder="WorkspaceID" />
-            </div>
-          </div>
+
           <div class="form-row">
             <div><span>User Agent</span></div>
             <div>
-              <input type="text" id="userAgent" placeholder="User Agent" />
+              <input
+                type="text"
+                class="form-input"
+                id="userAgent"
+                placeholder="User Agent"
+              />
             </div>
           </div>
           <div class="form-row">
             <div><span>API token</span></div>
             <div>
-              <input type="text" id="authKey" placeholder="API token" />
+              <input
+                type="text"
+                class="form-input"
+                id="authKey"
+                placeholder="API token"
+              />
             </div>
           </div>
           <div class="form-row">
             <div><span>Daily working time (minutes)</span></div>
             <div>
               <input
+                class="form-input"
                 type="number"
                 id="dailyTime"
                 placeholder="minutes per day"
@@ -40,15 +46,24 @@
           <div class="form-row">
             <div><span>First Day at Company</span></div>
             <div>
-              <input type="date" id="firstDay" />
+              <input class="form-input" type="date" id="firstDay" />
             </div>
           </div>
           <input type="checkbox" id="enableInject" value="inject" /><span
             >Enable Toggl injection</span
           >
-          <div>
+          <div class="saveRow">
             <button class="saveButton" id="saveOptions">Save</button
             ><span id="saveSuccess">Saved Successfully</span>
+          </div>
+          <div class="form-row" id="notConnected">
+            <span>NOT CONNECTED</span>
+          </div>
+          <div class="form-row" id="workspaceRow">
+            <div><span>Workspace</span></div>
+            <div>
+              <select id="workspaceID" placeholder="WorkspaceID"></select>
+            </div>
           </div>
         </div>
         <div class="mainContent">

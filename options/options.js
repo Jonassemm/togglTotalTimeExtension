@@ -9,29 +9,76 @@ const generateReport = document.querySelector('#generateReport');
 const enableInject = document.querySelector('#enableInject');
 const firstDay = document.querySelector('#firstDay');
 const dailyTime = document.querySelector('#dailyTime');
+const notConnected = document.getElementById('notConnected');
 
-submitBtn.addEventListener('click', () => {
+//reset save success message on input
+let formInputs = document.querySelectorAll('.form-input');
+formInputs.forEach((input) => {
+  input.addEventListener('input', () => {
+    saveSuccess.style.display = 'none';
+  });
+});
+
+submitBtn.addEventListener('click', async () => {
   if (
-    workspace_id.value &&
     user_agent.value &&
     authorization.value &&
     firstDay.value &&
     dailyTime.value
   ) {
     chrome.storage.sync.set({
-      workspaceID: workspace_id.value,
       userAgent: user_agent.value,
       authKey: authorization.value,
       firstDay: firstDay.value,
       dailyTime: dailyTime.value * 60 * 1000,
     });
-    saveSuccess.style.display = 'block';
+    initWorkspaces()
+      .then(() => {
+        notConnected.style.display = 'none';
+        document.getElementById('workspaceRow').style.display = 'flex';
+        chrome.storage.sync.set({
+          connected: true,
+          workspaceID: workspace_id.value,
+        });
+      })
+      .catch(() => {
+        document.getElementById('workspaceRow').style.display = 'none';
+        notConnected.style.display = 'block';
+        alert('Could not connect to the API');
+        chrome.storage.sync.set({
+          connected: false,
+        });
+      });
   }
+  saveSuccess.style.display = 'block';
 });
 
 enableInject.addEventListener('change', (e) => {
   chrome.storage.sync.set({ enableInject: e.target.checked });
 });
+
+function initWorkspaces() {
+  return new Promise((resolve, reject) => {
+    let dataFunctions = new DataFunctions();
+    dataFunctions.init().then(() => {
+      dataFunctions
+        .getWorkspaces()
+        .then((workspaces) => {
+          let spaces = workspaces.map((workspace) => {
+            let element = document.createElement('option');
+            element.value = workspace.id;
+            element.textContent = workspace.name;
+            return element;
+          });
+          workspace_id.appendChild(...spaces);
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    });
+  });
+}
 
 function initFields() {
   chrome.storage.sync.get(
@@ -44,8 +91,18 @@ function initFields() {
       'enableInject',
       'firstDay',
       'dailyTime',
+      'connected',
     ],
     (data) => {
+      if (data.connected) {
+        notConnected.style.display = 'none';
+        document.getElementById('workspaceRow').style.display = 'flex';
+        initWorkspaces().then(() => {
+          if (data.workspaceID) {
+            workspace_id.value = data.workspaceID;
+          }
+        });
+      }
       if (data.firstDay) {
         firstDay.value = data.firstDay;
       }
@@ -54,9 +111,6 @@ function initFields() {
       }
       if (data.enableInject) {
         enableInject.checked = true;
-      }
-      if (data.workspaceID) {
-        workspace_id.value = data.workspaceID;
       }
       if (data.userAgent) {
         user_agent.value = data.userAgent;

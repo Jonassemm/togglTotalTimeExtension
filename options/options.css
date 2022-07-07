@@ -42,11 +42,13 @@ button:hover {
 
 input[type='text'],
 input[type='number'],
-input[type='date'] {
+input[type='date'],
+select {
   background-color: #151517;
   color: #a9aaab;
   border: none;
   padding: 5px;
+  margin-top: 3px;
 }
 
 .form-row {
@@ -70,6 +72,16 @@ input[type='date'] {
   color: green;
   margin-left: 15px;
   display: none;
+}
+
+#saveOptions {
+  margin-bottom: 20px;
+}
+
+#workspaceRow {
+  display: none;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .specialDayRow {
@@ -134,4 +146,14 @@ tr:nth-child(odd) {
 
 .deleteEntryButton {
   color: white;
+}
+
+#notConnected {
+  color: red;
+  align-items: start;
+}
+
+.saveRow {
+  display: flex;
+  align-items: center;
 }

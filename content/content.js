@@ -123,8 +123,8 @@ function onUrlChange() {
   }
 }
 
-chrome.storage.sync.get(['enableInject'], (result) => {
-  if (result.enableInject) {
+chrome.storage.sync.get(['enableInject', 'connected'], (result) => {
+  if (result.enableInject && result.connected) {
     observer.observe(document.querySelector('.content-wrapper'), {
       childList: true,
       subtree: true,
