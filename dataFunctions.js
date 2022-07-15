@@ -27,7 +27,6 @@ class DataFunctions {
           if (
             data.firstDay &&
             data.dailyTime &&
-            data.workspaceID &&
             data.userAgent &&
             data.authKey
           ) {

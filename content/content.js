@@ -12,7 +12,7 @@ async function initData() {
 }
 // Observing change in today and week total time
 const timeObserver = new MutationObserver(function (mutations) {
-  if (Date.now() - lastUpdate > 1000) {
+  if (Date.now() - lastUpdate > 10000) {
     let coutingTime = 0;
     let currCount = document.querySelector(
       'span.time-format-utils__duration'
@@ -22,7 +22,8 @@ const timeObserver = new MutationObserver(function (mutations) {
     coutingTime += parseInt(currCount[0]) * 60 * 60 * 1000;
     coutingTime += parseInt(currCount[1]) * 60 * 1000;
     coutingTime += parseInt(currCount[2]) * 1000;
-    updateTime(tmpTime - coutingTime);
+    console.log('-- updating real time --');
+    updateTime(tmpTime + coutingTime);
     lastUpdate = Date.now();
   }
 });
@@ -30,8 +31,10 @@ const timeObserver = new MutationObserver(function (mutations) {
 // observice changes in time list (deletin adding entries)
 const timeListObserver = new MutationObserver(function (mutations) {
   window.setTimeout(() => {
-    if (mutations[0].target.className != 'css-yht0st-Root et8m3zx1')
+    if (mutations[0].target.className != 'css-yht0st-Root et8m3zx1') {
+      console.log('-- updating time list --');
       updateTime();
+    }
   }, 1000);
 });
 
@@ -62,6 +65,7 @@ const observer = new MutationObserver(function (mutations) {
         .querySelector('button.ew4ipl50')
         .addEventListener('click', function () {
           window.setTimeout(() => {
+            console.log('-- updating button click --');
             updateTime();
           }, 1000);
         });
@@ -114,6 +118,7 @@ function initTotalDisplay() {
     totalTimeElement,
     appendElement.querySelector(':nth-child(2)')
   );
+  console.log('-- updating init --');
   updateTime();
 }
 
@@ -132,6 +137,7 @@ chrome.storage.sync.get(['enableInject', 'connected'], (result) => {
 
     //update when storage changed
     chrome.storage.onChanged.addListener(function (changes, namespace) {
+      console.log('-- updating storage change --');
       updateTime();
     });
 
