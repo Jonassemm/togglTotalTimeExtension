@@ -3,7 +3,7 @@
 ## General
 
 Chrome Extension that calculates the cumulative working time balance.
-Currently it analyzes the whole working time from the first day (hardcoded) to the current date.
+Currently it analyzes the whole working time from the first day to the current date.
 The calculation considers the daily working time, public holidays, vacation days, sick-days, tracked time.
 
 The extension popup displays the working time balance.
