@@ -53,13 +53,10 @@ const observer = new MutationObserver(function (mutations) {
           characterData: true,
         }
       );
-      timeListObserver.observe(
-        document.querySelector('.css-1g8zd07-Page-EnhancedPage').lastChild,
-        {
-          childList: true,
-          subtree: true,
-        }
-      );
+      timeListObserver.observe(document.querySelector('.ejebv9b1').lastChild, {
+        childList: true,
+        subtree: true,
+      });
       // start/stop count time action listener
       document
         .querySelector('button.ew4ipl50')
