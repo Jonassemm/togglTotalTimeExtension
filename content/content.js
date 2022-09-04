@@ -40,19 +40,14 @@ const timeListObserver = new MutationObserver(function (mutations) {
 
 //trigger when page loaded
 const observer = new MutationObserver(function (mutations) {
-  if (document.querySelector('.css-1705vbf-Column-TimerDashboardArea')) {
+  if (document.querySelector('.enpl4rh2')) {
     observer.disconnect();
     initData().then(() => {
-      timeObserver.observe(
-        document.querySelector(
-          'div.css-58wx68-TrackedTimeSummaryRoot.e81yt6p0'
-        ),
-        {
-          childList: true,
-          subtree: true,
-          characterData: true,
-        }
-      );
+      timeObserver.observe(document.querySelector('.e81yt6p0'), {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
       timeListObserver.observe(document.querySelector('.ejebv9b1').lastChild, {
         childList: true,
         subtree: true,
