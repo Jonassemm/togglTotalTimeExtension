@@ -40,21 +40,27 @@ const timeListObserver = new MutationObserver(function (mutations) {
 
 //trigger when page loaded
 const observer = new MutationObserver(function (mutations) {
-  if (document.querySelector('.enpl4rh2')) {
+  if (document.querySelector('.ek1syr02')) {
     observer.disconnect();
     initData().then(() => {
-      timeObserver.observe(document.querySelector('.e81yt6p0'), {
+      timeObserver.observe(document.querySelector('.css-ivygzp-Duration'), {
         childList: true,
         subtree: true,
         characterData: true,
       });
-      timeListObserver.observe(document.querySelector('.ejebv9b1').lastChild, {
-        childList: true,
-        subtree: true,
-      });
+      timeListObserver.observe(
+        document.querySelector('.css-18dy723-Page-EnhancedPage-EnhancedPage')
+          .lastChild,
+        {
+          childList: true,
+          subtree: true,
+        }
+      );
       // start/stop count time action listener
       document
-        .querySelector('button.ew4ipl50')
+        .querySelector(
+          'button.css-us2esl-StyledTimerButton-timerButtonAnimationCss-timerButtonAnimationCss-timerButtonAnimationCss-timerStopConfettiAnimationCss-timerStopConfettiAnimationCss'
+        )
         .addEventListener('click', function () {
           window.setTimeout(() => {
             console.log('-- updating button click --');
@@ -103,7 +109,7 @@ function initTotalDisplay() {
   );
   totalTimeElement.appendChild(totalTimeElementDiv);
   const appendElement = document.querySelector(
-    '.css-1705vbf-Column-TimerDashboardArea'
+    '.css-mtxfq-Column-TimerDashboardArea'
   );
   document.querySelector('.custom-total-time')?.remove();
   appendElement.insertBefore(
