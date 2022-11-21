@@ -43,7 +43,7 @@ const observer = new MutationObserver(function (mutations) {
   if (document.querySelector('.ek1syr02')) {
     observer.disconnect();
     initData().then(() => {
-      timeObserver.observe(document.querySelector('.css-ivygzp-Duration'), {
+      timeObserver.observe(document.querySelector('.css-r06rn8-Duration'), {
         childList: true,
         subtree: true,
         characterData: true,
@@ -58,9 +58,7 @@ const observer = new MutationObserver(function (mutations) {
       );
       // start/stop count time action listener
       document
-        .querySelector(
-          'button.css-us2esl-StyledTimerButton-timerButtonAnimationCss-timerButtonAnimationCss-timerButtonAnimationCss-timerStopConfettiAnimationCss-timerStopConfettiAnimationCss'
-        )
+        .querySelector("[data-dom-element-id='timer-button']")
         .addEventListener('click', function () {
           window.setTimeout(() => {
             console.log('-- updating button click --');

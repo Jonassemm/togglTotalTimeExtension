@@ -100,19 +100,46 @@ class DataFunctions {
   };
 
   getToggl = async function (start, end) {
-    start = start.toISOString().split('T')[0];
-    end = end.toISOString().split('T')[0];
+    let sumOverYears = 0;
+    let startYear = start.getFullYear();
+    let endYear = end.getFullYear();
+    const diff = endYear - startYear + 1;
+    if (diff > 1) {
+      for (let i = 0; i < diff; i++) {
+        if (i == 0) {
+          let endOfYear = new Date(startYear, 11, 31);
+          sumOverYears += await this.fetchTogglData(start, endOfYear);
+          continue;
+        }
+        if (i == diff - 1) {
+          let startOfYear = new Date(endYear, 0, 1);
+          sumOverYears += await this.fetchTogglData(startOfYear, end);
+          continue;
+        }
+        let startOfYear = new Date(startYear + i, 0, 1);
+        let endOfYear = new Date(startYear + i, 11, 31);
+        sumOverYears += await this.fetchTogglData(startOfYear, endOfYear);
+      }
+    } else {
+      sumOverYears = await this.fetchTogglData(start, end);
+    }
+    return sumOverYears;
+  };
+
+  fetchTogglData = async function (start, end) {
     var myHeaders = new Headers();
     myHeaders.append(
       'Authorization',
       `Basic ${btoa(this.authKey + ':api_token')}`
     );
-
     var requestOptions = {
       method: 'GET',
       headers: myHeaders,
       redirect: 'follow',
     };
+
+    start = start.toISOString().split('T')[0];
+    end = end.toISOString().split('T')[0];
 
     return fetch(
       `https://api.track.toggl.com/reports/api/v2/summary?workspace_id=${this.workspaceID}&user_agent=${this.userAgent}&since=${start}&until=${end}`,
