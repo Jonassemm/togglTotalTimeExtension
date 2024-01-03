@@ -43,14 +43,9 @@ class DataFunctions {
             if (data.holidays) {
               this.holidays = data.holidays;
             }
-            if (data.publicHolidays) {
-              this.publicHolidays = data.publicHolidays;
+            this.fetchHolidays(this.firstDay).then(() => {
               resolve();
-            } else {
-              this.fetchHolidays().then(() => {
-                resolve();
-              });
-            }
+            });
           } else {
             alert(
               'Please enter your workspace ID, user agent and authorization key in the extension options to get data from Toggl!'
@@ -62,8 +57,18 @@ class DataFunctions {
     });
   };
 
-  fetchHolidays = async function () {
-    return fetch(`https://get.api-feiertage.de?years=2021,2022,2023&states=bw`)
+  fetchHolidays = async function (firstDay) {
+    let firstYear = new Date(firstDay).getFullYear();
+    if (!firstYear) firstYear = 2021;
+    const currentYear = new Date().getFullYear();
+
+    let years = '';
+    for (let year = firstYear; year <= currentYear; year++) {
+      years += year + ',';
+    }
+    years = years.slice(0, -1); // Remove the trailing comma
+
+    return fetch(`https://get.api-feiertage.de?years=${years}&states=bw`)
       .then((response) => response.json())
       .then((data) => data.feiertage)
       .then((data) => data.map((data) => data.date))
@@ -166,7 +171,7 @@ class DataFunctions {
   getDatesInRange = function (start, end, range) {
     let output = [];
     for (let i = 0; i < range.length; i++) {
-      if (new Date(range[i]) > start && new Date(range[i]) < end) {
+      if (new Date(range[i]) >= start && new Date(range[i]) <= end) {
         const dayOfWeek = new Date(range[i]).getDay();
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
           output.push(range[i]);
